@@ -312,7 +312,7 @@ const PerformanceForm = () => {
     if (mt10ID) {
       // 기본 정보 로드
       axios
-        .get(`https://adminmodeunticket.store/performance/${mt10ID}`)
+        .get(`http://192.168.50.236:8081/performance/${mt10ID}`)
         .then((response) => {
           const performanceData = response.data[0];
           setFormData({
@@ -335,7 +335,7 @@ const PerformanceForm = () => {
 
       // 등급 정보 로드
       axios
-        .get(`https://adminmodeunticket.store/performance/grade/${mt10ID}`)
+        .get(`http://192.168.50.236:8081/performance/grade/${mt10ID}`)
         .then((response) => {
           const gradeData = response.data;
           if (gradeData && gradeData.length > 0) {
@@ -370,7 +370,7 @@ const PerformanceForm = () => {
     if (mt10ID) {
       // 등급 정보 로드
       axios
-        .get(`https://adminmodeunticket.store/performance/grade/${mt10ID}`)
+        .get(`http://192.168.50.236:8081/performance/grade/${mt10ID}`)
         .then((response) => {
           const gradeData = response.data;
           if (gradeData && gradeData.length > 0) {
@@ -706,7 +706,7 @@ const PerformanceForm = () => {
 
     try {
       const response = await axios.post(
-        "https://adminmodeunticket.store/performance/update",
+        "http://192.168.50.236:8081/performance/update",
         submitData
       );
       if (response.data > 0) {

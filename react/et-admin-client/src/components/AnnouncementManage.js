@@ -398,7 +398,7 @@ export default function AnnouncementManage() {
                             ) {
                               try {
                                 const response = await axios.post(
-                                  `https://adminmodeunticket.store/announcement/delete/${announcement.announceNo}`
+                                  `http://192.168.50.236:8081/announcement/delete/${announcement.announceNo}`
                                 );
                                 if (response.data > 0) {
                                   alert("공지사항이 삭제되었습니다.");
