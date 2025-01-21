@@ -83,7 +83,7 @@ public class MemberController {
 	        ).getBytes()
 	    ), StandardCharsets.UTF_8);
 
-	    return "redirect:https://final-project-react-individual.vercel.app/?" + state;
+	    return "redirect:https://192.168.50.236?" + state;
 	}
 
 	/**
