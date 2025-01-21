@@ -91,7 +91,7 @@ export default function DashBoard() {
         const stateParam = params.get("state");
 
         if (!stateParam) {
-          window.location.href = "http://modeunticket.store/";
+          window.location.href = "http://192.168.50.236";
           return;
         }
 
@@ -100,13 +100,13 @@ export default function DashBoard() {
         if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
           localStorage.removeItem("adminAuth");
           localStorage.removeItem("adminToken");
-          window.location.href = "http://modeunticket.store/";
+          window.location.href = "http://192.168.50.236";
           return;
         }
 
         // API 호출로 관리자 권한 확인
         const response = await fetch(
-          "https://adminmodeunticket.store/admin/auth",
+          "http://192.168.50.236:8081/admin/auth",
           {
             method: "POST",
             headers: {
@@ -157,7 +157,7 @@ export default function DashBoard() {
       <Title className="dash-board-title">
         <StyledNavLink to="/">관리자 페이지</StyledNavLink>
         <BackButton
-          href="http://modeunticket.store/"
+          href="http://192.168.50.236"
           onClick={() => {
             localStorage.removeItem("adminAuth");
             localStorage.removeItem("adminToken");

@@ -278,7 +278,7 @@ export default function InquiryDetail() {
   const fetchInquiry = async () => {
     try {
       const response = await axios.get(
-        `https://adminmodeunticket.store/inquiry/${inquiryNo}`
+        `http://192.168.50.236:8081/inquiry/${inquiryNo}`
       );
       const inquiryData = Array.isArray(response.data)
         ? response.data[0]
@@ -330,7 +330,7 @@ export default function InquiryDetail() {
 
     try {
       const response = await axios.post(
-        `https://adminmodeunticket.store/inquiry/reply/${inquiryNo}`,
+        `http://192.168.50.236:8081/inquiry/reply/${inquiryNo}`,
         {
           replyContent: replyContent,
         }

@@ -3,7 +3,7 @@
 import axios from "axios";
 
 export const axiosApi = axios.create({
-  baseURL: "https://adminmodeunticket.store",
+  baseURL: "http://192.168.50.236:8081",
   headers: { "Content-Type": "application/json" },
   credentials: "include",
   withCredentials: true, // 쿠키 포함 설정

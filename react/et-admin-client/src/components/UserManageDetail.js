@@ -181,7 +181,7 @@ const MemberUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`https://adminmodeunticket.store/member/${memberNo}`)
+      .get(`http://192.168.50.236:8081/member/${memberNo}`)
       .then((response) => {
         const memberData = response.data[0];
         setFormData({
@@ -221,7 +221,7 @@ const MemberUpdate = () => {
   const handleDelete = async () => {
     try {
       const response = await axios.post(
-        `https://adminmodeunticket.store/member/delete/${memberNo}`
+        `http://192.168.50.236:8081/member/delete/${memberNo}`
       );
       if (response.status === 200) {
         alert("회원이 삭제되었습니다.");
@@ -249,7 +249,7 @@ const MemberUpdate = () => {
 
     axios
       .post(
-        `https://adminmodeunticket.store/member/update/${memberNo}`,
+        `http://192.168.50.236:8081/member/update/${memberNo}`,
         formdata
       )
       .then((response) => {

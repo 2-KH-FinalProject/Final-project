@@ -306,7 +306,7 @@ const ManagerEnrollDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`https://adminmodeunticket.store/manager/${concertManagerNo}`)
+      .get(`http://192.168.50.236:8081/manager/${concertManagerNo}`)
       .then((response) => {
         const memberData = response.data[0];
         setFormData({
@@ -333,7 +333,7 @@ const ManagerEnrollDetail = () => {
 
   const handleAgree = () => {
     axios
-      .post(`https://adminmodeunticket.store/manager/agree/${concertManagerNo}`)
+      .post(`http://192.168.50.236:8081/manager/agree/${concertManagerNo}`)
       .then((response) => {
         alert("승인이 완료되었습니다.");
         window.history.back();
@@ -348,7 +348,7 @@ const ManagerEnrollDetail = () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       axios
         .post(
-          `https://adminmodeunticket.store/manager/delete/${concertManagerNo}`
+          `http://192.168.50.236:8081/manager/delete/${concertManagerNo}`
         )
         .then((response) => {
           alert("삭제가 완료되었습니다.");
@@ -371,7 +371,7 @@ const ManagerEnrollDetail = () => {
 
     axios
       .post(
-        `https://adminmodeunticket.store/manager/update/${concertManagerNo}`,
+        `http://192.168.50.236:8081/manager/update/${concertManagerNo}`,
         serverFormData
       )
       .then((response) => {

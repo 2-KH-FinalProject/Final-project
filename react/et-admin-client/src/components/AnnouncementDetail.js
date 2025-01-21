@@ -139,7 +139,7 @@ function Write() {
 
   useEffect(() => {
     axios
-      .get(`https://adminmodeunticket.store/announcement/${announceNo}`)
+      .get(`http://192.168.50.236:8081/announcement/${announceNo}`)
       .then((response) => {
         // response.data[0]로 접근해야 함 (배열의 첫 번째 요소)
         const AnnounceData = response.data[0]; // 여기를 수정
@@ -193,7 +193,7 @@ function Write() {
 
     try {
       const response = await axios({
-        url: "https://adminmodeunticket.store/announcement/update",
+        url: "http://192.168.50.236:8081/announcement/update",
         method: "POST",
         data: formData,
         withCredentials: true,
