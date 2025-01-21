@@ -249,13 +249,14 @@ const scrollHandler = throttle(() => {
 // 초기화 및 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', function() {
     // 저장된 필터 상태 복원
-    const savedFilter = localStorage.getItem('performanceFilter');
+    const savedFilter = localStorage.getItem('perfmgrFilter');
     if (savedFilter) {
         currentFilter = savedFilter;
         const filterButton = document.querySelector(`.filter-btn[data-filter="${savedFilter}"]`);
         if (filterButton) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             filterButton.classList.add('active');
+			localStorage.removeItem('perfmgrFilter');
         }
     }
 
@@ -274,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(e) {
             // 현재 필터 상태 저장
             const filter = this.dataset.filter;
-            localStorage.setItem('performanceFilter', filter);
+            localStorage.setItem('perfmgrFilter', filter);
             handleFilterClick(e);
         });
     });

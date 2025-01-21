@@ -302,6 +302,7 @@ function initializeEventListeners() {
             savedTabButton.classList.add('active');
             document.querySelector('.tab-button.active')?.classList.remove('active');
             savedTabButton.classList.add('active');
+			localStorage.removeItem('performanceFilter');
         }
     }
 	

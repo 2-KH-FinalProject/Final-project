@@ -96,6 +96,20 @@
 	<script src="/js/header.js"></script>
 	<script src="/js/perfmgr/perfmgr.js"></script>
 	<script src="/js/common/search.js"></script>
+	
+	<script>
+		// DOM이 로드된 후 실행
+		document.addEventListener('DOMContentLoaded', function() {
+		    // nav-link 클래스를 가진 모든 링크에 이벤트 리스너 추가
+		    document.querySelectorAll('.nav-link').forEach(link => {
+		        link.addEventListener('click', function() {
+		            // 페이지 이동 전에 localStorage의 필터 삭제
+		            localStorage.removeItem('performanceFilter');
+		            localStorage.removeItem('perfmgrFilter');
+		        });
+		    });
+		});
+	</script>
 </body>
 
 </html>

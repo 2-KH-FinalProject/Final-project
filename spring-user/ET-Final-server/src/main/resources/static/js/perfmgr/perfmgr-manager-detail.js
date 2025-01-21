@@ -7,7 +7,7 @@ function deletePerformance() {
        const mt20id = document.getElementById('mt20id').value;
 
        const currentFilter = document.querySelector('.tab-button.active')?.dataset.filter || 'all';
-       localStorage.setItem('performanceFilter', currentFilter);
+       localStorage.setItem('perfmgrFilter', currentFilter);
 
        fetch(`/perfmgr/delete/${mt20id}`, {
            method: 'POST',
