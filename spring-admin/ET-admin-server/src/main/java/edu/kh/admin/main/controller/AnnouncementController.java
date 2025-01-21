@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController 
-@CrossOrigin( origins = "https://final-project-react-jjh.vercel.app/",
+@CrossOrigin( origins = "http://localhost:3000",
 			  allowedHeaders = "*",
 			  allowCredentials = "true",
 			  methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, 
