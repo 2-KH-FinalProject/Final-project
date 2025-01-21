@@ -5,7 +5,7 @@
 	<!-- 모든 회원 조회 -->
 	<select id="showMemberList">
 		SELECT MEMBER_NO, MEMBER_NICKNAME
-		,MEMBER_ADDRESS ,MEMBER_TEL
+		,MEMBER_EMAIL ,MEMBER_TEL
 		FROM "TB_MEMBER"
 		WHERE MEMBER_DEL_FL = 'N'
 		AND MEMBER_AUTH = '1'
@@ -18,7 +18,7 @@
 		SELECT
 		MEMBER_NO,
 		MEMBER_NICKNAME,
-		MEMBER_ADDRESS,
+		MEMBER_EMAIL,
 		MEMBER_TEL
 		FROM
 		"TB_MEMBER"
@@ -29,8 +29,8 @@
 			<when test="selectedValue == '회원이름'">
 				AND MEMBER_NICKNAME LIKE '%' || #{inputValue} || '%'
 			</when>
-			<when test="selectedValue == '주소'">
-				AND MEMBER_ADDRESS LIKE '%' || #{inputValue} || '%'
+			<when test="selectedValue == '이메일'">
+				AND MEMBER_EMAIL LIKE '%' || #{inputValue} || '%'
 			</when>
 			<otherwise>
 				AND MEMBER_TEL LIKE '%' || #{inputValue} || '%'
