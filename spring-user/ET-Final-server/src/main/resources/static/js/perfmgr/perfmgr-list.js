@@ -161,7 +161,7 @@ function loadMorePerformances() {
 					showNoDataMessage(currentFilter, searchKeyword);
 				}
 			}
-			
+
 		})
 		.catch(error => {
 			console.error('Error loading performances:', error);
@@ -219,7 +219,7 @@ function handleFilterClick(e) {
 	if (existingMessage) {
 		existingMessage.remove();
 	}
-	
+
 	const button = e.target;
 	if (button.classList.contains('active')) return;
 
@@ -248,30 +248,46 @@ const scrollHandler = throttle(() => {
 
 // 초기화 및 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', function() {
-	// 검색 버튼 클릭 이벤트
-	document.getElementById('performanceSearchButton').addEventListener('click', handleSearch);  // ID 변경
+    // 저장된 필터 상태 복원
+    const savedFilter = localStorage.getItem('performanceFilter');
+    if (savedFilter) {
+        currentFilter = savedFilter;
+        const filterButton = document.querySelector(`.filter-btn[data-filter="${savedFilter}"]`);
+        if (filterButton) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            filterButton.classList.add('active');
+        }
+    }
 
-	// 엔터 키 이벤트
-	document.getElementById('performanceSearchInput').addEventListener('keypress', function(e) {  // ID 변경
-		if (e.key === 'Enter') {
-			handleSearch();
-		}
-	});
+    // 검색 버튼 클릭 이벤트
+    document.getElementById('performanceSearchButton').addEventListener('click', handleSearch);
 
-	// 필터 버튼 이벤트 리스너 등록
-	document.querySelectorAll('.filter-btn').forEach(button => {
-		button.addEventListener('click', handleFilterClick);
-	});
+    // 엔터 키 이벤트
+    document.getElementById('performanceSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
 
-	// 첫 데이터 로드
-	loadMorePerformances();
+    // 필터 버튼 이벤트 리스너 등록
+    document.querySelectorAll('.filter-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            // 현재 필터 상태 저장
+            const filter = this.dataset.filter;
+            localStorage.setItem('performanceFilter', filter);
+            handleFilterClick(e);
+        });
+    });
 
-	// 이벤트 리스너 등록
-	scrollToTopButton.addEventListener('click', scrollToTop);
-	window.addEventListener('scroll', throttle(toggleScrollButton, 100));
+    // 첫 데이터 로드
+    loadMorePerformances();
 
-	// 스크롤 이벤트 리스너 등록
-	window.addEventListener('scroll', scrollHandler, { passive: true });
+    // 이벤트 리스너 등록
+    scrollToTopButton.addEventListener('click', scrollToTop);
+    window.addEventListener('scroll', throttle(toggleScrollButton, 100));
+
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener('scroll', scrollHandler, { passive: true });
 });
 
 // 정리

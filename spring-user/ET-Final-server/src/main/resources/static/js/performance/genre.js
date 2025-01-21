@@ -6,7 +6,8 @@ const state = {
     currentFilter: 'all',
     initialLoadComplete: false,
     searchKeyword: '',
-    searchType: 'all'
+    searchType: 'all',
+	savedFilter: localStorage.getItem('performanceFilter') || 'all' // 추가
 };
 
 // DOM 요소 캐싱
@@ -282,6 +283,7 @@ function handleTabClick(button) {
     button.classList.add('active');
 
     state.currentFilter = button.dataset.filter;
+	localStorage.setItem('performanceFilter', state.currentFilter);
     state.page = 1;
     state.hasMoreData = true;
     
@@ -291,6 +293,18 @@ function handleTabClick(button) {
 
 // 초기화 및 이벤트 리스너
 function initializeEventListeners() {
+	// 저장된 필터 상태 복원
+    const savedFilter = state.savedFilter;
+    if (savedFilter) {
+        const savedTabButton = document.querySelector(`.tab-button[data-filter="${savedFilter}"]`);
+        if (savedTabButton) {
+            state.currentFilter = savedFilter;
+            savedTabButton.classList.add('active');
+            document.querySelector('.tab-button.active')?.classList.remove('active');
+            savedTabButton.classList.add('active');
+        }
+    }
+	
     domElements.searchButton.addEventListener('click', handleSearch);
     domElements.searchInput.addEventListener('keypress', e => {
         if (e.key === 'Enter') handleSearch();
