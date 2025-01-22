@@ -110,7 +110,13 @@ newPassword.addEventListener("input", debounce(async (e) => {
 }, 100));
 
 // 비밀번호 확인 실시간 검사
-confirmPassword.addEventListener("input", validatePasswordMatch);
+confirmPassword.addEventListener("input", (e) => {
+    if (e.target.value.trim().length === 0) {
+        confirmPasswordMessage.innerText = "";
+    } else {
+        validatePasswordMatch();
+    }
+});
 
 // 폼 제출 처리
 resetPasswordForm.addEventListener('submit', async (e) => {

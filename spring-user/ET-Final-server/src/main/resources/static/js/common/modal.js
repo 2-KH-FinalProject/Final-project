@@ -3,6 +3,7 @@ function openModal(modalId) {
 	const modal = document.getElementById(modalId);
 	if (modal) {
 		modal.style.display = 'flex';
+		clearModalInputs(modalId);
 		setTimeout(() => {
 			modal.classList.add('show');
 			// 로그인 모달이 열릴 때 네이버 로그인 초기화
@@ -26,6 +27,7 @@ function closeModal(modalId) {
 		modal.classList.remove('show');
 		setTimeout(() => {
 			modal.style.display = 'none';
+			clearModalInputs(modalId);
 		}, 300);
 	}
 }
@@ -38,6 +40,22 @@ function checkForInputData(modalElement) {
 
 function getModalId(element) {
     return element.id;
+}
+
+function clearModalInputs(modalId) {
+   const modal = document.getElementById(modalId);
+   if (modal) {
+      // 모든 입력 필드 초기화
+      modal.querySelectorAll('input, textarea').forEach(input => {
+         input.value = '';
+      });
+
+      // Caps Lock 메시지 초기화
+      const capsLockMessages = modal.querySelectorAll('[id$="Message"]');
+      capsLockMessages.forEach(msg => {
+         msg.innerText = '';
+      });
+   }
 }
 
 function checkCapsLock(event) {

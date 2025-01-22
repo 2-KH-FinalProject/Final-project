@@ -41,7 +41,11 @@
     </div>
 </footer>
 
-<script>
+<script th:inline="javascript">
+   const message =  /*[[${message}]]*/ "전달 받은 message";
+
+   if (message != null) alert(message);ript>
+   
     // DOM이 로드된 후 실행
     document.addEventListener('DOMContentLoaded', function() {
         // footer-link 클래스를 가진 모든 링크에 이벤트 리스너 추가

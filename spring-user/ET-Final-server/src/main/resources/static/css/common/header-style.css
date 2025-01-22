@@ -646,13 +646,22 @@
 }
 
 .modal-footer a {
-	color: #004CFF;
-	text-decoration: none;
-	font-weight: bold;
+   color: #004CFF;
+   text-decoration: none;
+   font-weight: bold;
+   cursor: pointer;
+   padding: 2px 4px;
+   border-radius: 4px;
+   transition: background-color 0.3s;
 }
 
 .modal-footer a:hover {
-	text-decoration: underline;
+   background-color: rgba(0, 76, 255, 0.1);
+   text-decoration: none;
+}
+
+.modal-footer a:active {
+   background-color: rgba(0, 76, 255, 0.2);
 }
 
 /* 성별 선택 영역 */
