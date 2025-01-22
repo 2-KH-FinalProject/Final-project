@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>공연 예매 사이트</title>
+	<title>티켓팅 시스템</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link rel="stylesheet" href="/css/performance/performance-detail-calander.css">
 	<th:block th:replace="~{common/common}"></th:block>
@@ -210,6 +210,7 @@
 			runtime: /*[[${performance.prfruntime}]]*/ '',
 			cast: /*[[${performance.prfcast}]]*/ '',
 			venue: /*[[${performance.fcltynm}]]*/ '',
+			prfstate: /*[[${performance.prfstate}]]*/ '',
 			schedule: /*[[${performance.schedule}]]*/ {}
 		};
 
