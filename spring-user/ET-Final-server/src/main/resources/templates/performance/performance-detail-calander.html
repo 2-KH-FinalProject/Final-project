@@ -14,6 +14,11 @@
 	<th:block th:replace="~{common/header}"></th:block>
 	<!-- HTML 수정 부분 -->
 	<div class="performance-container" style="margin-top: 20px;">
+		<div class="mt-3 mb-4">
+		    <button id="backToList" class="btn custom-back-btn" style="padding-left: 0;">
+		        <i class="fas fa-angle-left me-1"></i>목록으로
+		    </button>
+		</div>
 		<div class="performance-content">
 			<!-- 왼쪽: 공연 정보 -->
 			<div class="performance-info">
@@ -244,6 +249,43 @@
 
 				starsDiv.innerHTML = starsHtml;
 			});
+		});
+		
+		document.getElementById('backToList').addEventListener('click', function() {
+		    const currentUrl = new URL(window.location.href);
+		    const searchParams = currentUrl.searchParams;
+		    
+		    // 장르 한글값을 영문으로 변환
+		    let genreParam = '';
+		    const genre = decodeURIComponent(searchParams.get('genre'));
+		    
+		    switch(genre) {
+		        case '뮤지컬':
+		            genreParam = 'musical';
+		            break;
+		        case '연극':
+		            genreParam = 'theater';
+		            break;
+		        case '서양음악(클래식)':
+		            genreParam = 'classic';
+		            break;
+		        default:
+		            genreParam = genre;
+		    }
+
+		    // localStorage에 검색 파라미터 저장
+		    if (searchParams.has('searchKeyword')) {
+		        localStorage.setItem('searchKeyword', searchParams.get('searchKeyword'));
+		    }
+		    if (searchParams.has('searchType')) {
+		        localStorage.setItem('searchType', searchParams.get('searchType'));
+		    }
+		    if (searchParams.has('filter')) {
+		        localStorage.setItem('currentFilter', searchParams.get('filter'));
+		    }
+
+		    // 페이지 이동
+		    window.location.href = `/performance/genre/${genreParam}`;
 		});
 	</script>
 
