@@ -418,14 +418,15 @@ class Calendar {
 }
 
 function initializeStarRating(container) {
-	const labels = container.querySelectorAll('label');
+	const labels = Array.from(container.querySelectorAll('label'));
 	const inputs = container.querySelectorAll('input[type="radio"]');
 	let selectedRating = 0;
 
 	// 별점 업데이트 함수
 	const updateStars = (rating) => {
 		labels.forEach((label, index) => {
-			label.style.color = index < rating ? '#ffca28' : '#ddd';
+			// 선택된 별점까지 색칠 (역순으로 계산)
+			label.style.color = (labels.length - index) <= rating ? '#ffca28' : '#ddd';
 		});
 	};
 
@@ -447,36 +448,36 @@ function initializeStarRating(container) {
 		});
 	});
 
-	// 호버 이벤트
+	// 호버 이벤트 (왼쪽에서 오른쪽으로)
 	labels.forEach((label, index) => {
 		label.addEventListener("mouseenter", () => {
-			const rating = index + 1;
+			const hoverRating = labels.length - index;
 			labels.forEach((l, i) => {
-				if (i <= index) {
-					l.style.color = "#ffca28";
-				} else {
-					l.style.color = "#ddd";
-				}
+				l.style.color = (labels.length - i) <= hoverRating ? "#ffca28" : "#ddd";
 			});
 		});
-
-		container.addEventListener("mouseleave", () => {
-			if (selectedRating > 0) {
-				labels.forEach((l, i) => {
-					l.style.color = i < selectedRating ? "#ffca28" : "#ddd";
-				});
-			} else {
-				labels.forEach((l) => (l.style.color = "#ddd"));
-			}
-		});
 	});
+
+	// 마우스가 벗어났을 때
+	container.addEventListener("mouseleave", () => {
+		if (selectedRating > 0) {
+			updateStars(selectedRating);
+		} else {
+			labels.forEach(l => l.style.color = "#ddd");
+		}
+	});
+
+	return {
+		getValue: () => selectedRating,
+		updateStars: updateStars
+	};
 }
 
 // 별점을 문자열로 변환하는 함수
 function getStarString(rating) {
 	const fullStars = '★'.repeat(Math.floor(rating));
-    const emptyStars = '☆'.repeat(5 - Math.floor(rating));
-    return `${fullStars}${emptyStars}`;
+	const emptyStars = '☆'.repeat(5 - Math.floor(rating));
+	return `${fullStars}${emptyStars}`;
 }
 
 /**
@@ -540,13 +541,15 @@ function initializeReviews() {
 	}
 
 	// 리뷰 등록
+	// 리뷰 등록 부분 수정
 	$("#submitReview").click(function() {
 		if (!currentMemberNo) {
 			alert("로그인 후 이용해주세요.");
 			return;
 		}
 
-		if (!$('input[name="rating"]:checked').val()) {
+		const selectedRating = $('input[name="rating"]:checked').val();
+		if (!selectedRating) {
 			alert("별점을 선택해주세요.");
 			return;
 		}
@@ -558,7 +561,7 @@ function initializeReviews() {
 
 		const reviewData = {
 			mt20id: mt20id,
-			reviewStar: $('input[name="rating"]:checked').val(),
+			reviewStar: selectedRating,  // 직접 선택된 값 사용
 			reviewContent: $("#reviewContent").val(),
 		};
 
@@ -570,16 +573,7 @@ function initializeReviews() {
 			success: function(response) {
 				if (response.success) {
 					alert('리뷰가 등록되었습니다.');
-					$('#reviewContent').val('');
-					$('input[name="rating"]').prop('checked', false);
-
-					// 별점 완전 초기화
-					const mainStarRating = document.querySelector('.star-rating');
-					if (mainStarRating && mainStarRating.resetStars) {
-						mainStarRating.resetStars();
-					}
-
-					loadReviews();
+					location.reload(); // 페이지 새로고침
 				} else {
 					alert(response.message);
 				}
@@ -591,43 +585,77 @@ function initializeReviews() {
 	});
 
 	// 리뷰 수정 시 별점 초기화
+	// 리뷰 수정 시 별점 초기화
 	$(document).on("click", ".edit-review", function() {
 		const reviewNo = $(this).data("review-no");
 		const reviewItem = $(this).closest(".review-item");
 		const content = reviewItem.find(".review-content").text().trim();
-		const currentStars =
-			reviewItem.find(".review-stars").text().trim().split("★").length - 1;
+		const currentStars = reviewItem.find(".numeric-rating").text().replace(/[()]/g, '');
 
 		reviewItem.html(`
-	            <div class="review-edit-form">
-	                <div class="star-rating">
-	                    <input type="radio" name="edit-rating-${reviewNo}" value="1" id="edit-rate1-${reviewNo}" ${currentStars === 1 ? "checked" : ""}>
-	                    <label for="edit-rate1-${reviewNo}">★</label>
-	                    <input type="radio" name="edit-rating-${reviewNo}" value="2" id="edit-rate2-${reviewNo}" ${currentStars === 2 ? "checked" : ""}>
-	                    <label for="edit-rate2-${reviewNo}">★</label>
-	                    <input type="radio" name="edit-rating-${reviewNo}" value="3" id="edit-rate3-${reviewNo}" ${currentStars === 3 ? "checked" : ""}>
-	                    <label for="edit-rate3-${reviewNo}">★</label>
-	                    <input type="radio" name="edit-rating-${reviewNo}" value="4" id="edit-rate4-${reviewNo}" ${currentStars === 4 ? "checked" : ""}>
-	                    <label for="edit-rate4-${reviewNo}">★</label>
-	                    <input type="radio" name="edit-rating-${reviewNo}" value="5" id="edit-rate5-${reviewNo}" ${currentStars === 5 ? "checked" : ""}>
-	                    <label for="edit-rate5-${reviewNo}">★</label>
-	                </div>
-	                <textarea class="edit-content">${content}</textarea>
-	                <div class="edit-actions">
-	                    <button class="review-action-btn save-edit" data-review-no="${reviewNo}">저장</button>
-	                    <button class="review-action-btn cancel-edit">취소</button>
-	                </div>
+	        <div class="review-edit-form">
+	            <div class="edit-star-rating">
+	                <input type="radio" name="edit-rating-${reviewNo}" value="1" id="edit-rate1-${reviewNo}" ${Number(currentStars) === 1 ? "checked" : ""}>
+	                <label for="edit-rate1-${reviewNo}">★</label>
+	                <input type="radio" name="edit-rating-${reviewNo}" value="2" id="edit-rate2-${reviewNo}" ${Number(currentStars) === 2 ? "checked" : ""}>
+	                <label for="edit-rate2-${reviewNo}">★</label>
+	                <input type="radio" name="edit-rating-${reviewNo}" value="3" id="edit-rate3-${reviewNo}" ${Number(currentStars) === 3 ? "checked" : ""}>
+	                <label for="edit-rate3-${reviewNo}">★</label>
+	                <input type="radio" name="edit-rating-${reviewNo}" value="4" id="edit-rate4-${reviewNo}" ${Number(currentStars) === 4 ? "checked" : ""}>
+	                <label for="edit-rate4-${reviewNo}">★</label>
+	                <input type="radio" name="edit-rating-${reviewNo}" value="5" id="edit-rate5-${reviewNo}" ${Number(currentStars) === 5 ? "checked" : ""}>
+	                <label for="edit-rate5-${reviewNo}">★</label>
 	            </div>
-	        `);
+	            <textarea class="edit-content">${content}</textarea>
+	            <div class="edit-actions">
+	                <button class="review-action-btn save-edit" data-review-no="${reviewNo}">저장</button>
+	                <button class="review-action-btn cancel-edit">취소</button>
+	            </div>
+	        </div>
+	    `);
 
 		// 수정 폼의 별점 초기화
-		const editStarRating = reviewItem.find(".star-rating")[0];
-		initializeStarRating(editStarRating);
-		if (currentStars > 0) {
-			const labels = editStarRating.querySelectorAll("label");
-			labels.forEach((l, i) => {
-				l.style.color = i < currentStars ? "#ffca28" : "#ddd";
+		const editStarRating = reviewItem.find(".edit-star-rating")[0];
+
+		// 별점 업데이트 함수
+		const updateEditStars = (rating) => {
+			const labels = Array.from(editStarRating.querySelectorAll('label'));
+			labels.forEach((label, index) => {
+				label.style.color = index < rating ? '#ffca28' : '#ddd';
 			});
+		};
+
+		// 호버 이벤트 추가
+		const labels = editStarRating.querySelectorAll('label');
+		labels.forEach((label, index) => {
+			label.addEventListener('mouseenter', () => {
+				Array.from(labels).forEach((l, i) => {
+					l.style.color = i <= index ? '#ffca28' : '#ddd';
+				});
+			});
+		});
+
+		// 마우스 벗어날 때 이벤트
+		editStarRating.addEventListener('mouseleave', () => {
+			const selectedRating = editStarRating.querySelector('input:checked')?.value;
+			if (selectedRating) {
+				updateEditStars(Number(selectedRating));
+			} else {
+				Array.from(labels).forEach(label => label.style.color = '#ddd');
+			}
+		});
+
+		// 클릭 이벤트 추가
+		const inputs = editStarRating.querySelectorAll('input[type="radio"]');
+		inputs.forEach(input => {
+			input.addEventListener('change', () => {
+				updateEditStars(Number(input.value));
+			});
+		});
+
+		// 초기 별점 설정
+		if (currentStars) {
+			updateEditStars(Number(currentStars));
 		}
 	});
 
@@ -641,9 +669,7 @@ function initializeReviews() {
 		const reviewNo = $(this).data("review-no");
 		const reviewItem = $(this).closest(".review-item");
 		const newContent = reviewItem.find(".edit-content").val();
-		const newRating = reviewItem
-			.find(`input[name="edit-rating-${reviewNo}"]:checked`)
-			.val();
+		const newRating = reviewItem.find(`input[name="edit-rating-${reviewNo}"]:checked`).val();
 
 		if (!newContent.trim()) {
 			alert("리뷰 내용을 입력해주세요.");
@@ -667,14 +693,7 @@ function initializeReviews() {
 			success: function(response) {
 				if (response.success) {
 					alert('리뷰가 수정되었습니다.');
-
-					// 별점 완전 초기화
-					const mainStarRating = document.querySelector('.star-rating');
-					if (mainStarRating && mainStarRating.resetStars) {
-						mainStarRating.resetStars();
-					}
-
-					loadReviews();
+					location.reload(); // 페이지 새로고침
 				} else {
 					alert(response.message);
 				}
@@ -697,14 +716,7 @@ function initializeReviews() {
 			success: function(response) {
 				if (response.success) {
 					alert('리뷰가 삭제되었습니다.');
-
-					// 별점 완전 초기화
-					const mainStarRating = document.querySelector('.star-rating');
-					if (mainStarRating && mainStarRating.resetStars) {
-						mainStarRating.resetStars();
-					}
-
-					loadReviews();
+					location.reload(); // 페이지 새로고침
 				} else {
 					alert(response.message);
 				}

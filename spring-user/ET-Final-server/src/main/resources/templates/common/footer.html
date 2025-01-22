@@ -17,11 +17,11 @@
 
         <div class="footer-section">
             <h4>빠른 메뉴</h4>
-            <ul>
-                <li><a href="/performance/genre/musical">뮤지컬</a></li>
-                <li><a href="/performance/genre/theater">연극</a></li>
-                <li><a href="/performance/genre/classic">클래식</a></li>
-                <li><a href="/notice/list">공지사항</a></li>
+			<ul>
+                <li><a href="/performance/genre/musical" class="footer-link">뮤지컬</a></li>
+                <li><a href="/performance/genre/theater" class="footer-link">연극</a></li>
+                <li><a href="/performance/genre/classic" class="footer-link">클래식</a></li>
+                <li><a href="/notice/list" class="footer-link">공지사항</a></li>
             </ul>
         </div>
 
@@ -40,3 +40,19 @@
         <p>&copy; 2025 Ticket Master. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    // DOM이 로드된 후 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        // footer-link 클래스를 가진 모든 링크에 이벤트 리스너 추가
+        document.querySelectorAll('.footer-link').forEach(link => {
+            link.addEventListener('click', function() {
+                // 링크 클릭 시 localStorage 데이터 삭제
+                localStorage.removeItem('currentFilter');
+                localStorage.removeItem('perfmgrFilter');
+                localStorage.removeItem('searchKeyword');
+                localStorage.removeItem('searchType');
+            });
+        });
+    });
+</script>

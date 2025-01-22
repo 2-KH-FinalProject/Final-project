@@ -61,19 +61,11 @@
 	<!-- 공연 리뷰 평점 업데이트 -->
 	<update id="updatePerformanceReviewRanks">
 	    UPDATE TB_PERFORMANCES_DETAIL pd
-	    SET PRFREVIEW_RANK = (
-	        SELECT NVL(AVG(pr.REVIEW_STAR), 0)
-	        FROM TB_PERFORMANCE_REVIEW pr
-	        WHERE pr.MT20ID = pd.MT20ID
-	        AND pr.REVIEW_DEL_FL = 'N'
-	        GROUP BY pr.MT20ID
-	    )
-	    WHERE EXISTS (
-	        SELECT 1
-	        FROM TB_PERFORMANCE_REVIEW pr
-	        WHERE pr.MT20ID = pd.MT20ID
-	        AND pr.REVIEW_DEL_FL = 'N'
-	    )
+		SET PRFREVIEW_RANK = (
+		    SELECT NVL(AVG(pr.REVIEW_STAR), 0)
+		    FROM TB_PERFORMANCE_REVIEW pr
+		    WHERE pr.MT20ID = pd.MT20ID
+		)
 	</update>
 	
 	
