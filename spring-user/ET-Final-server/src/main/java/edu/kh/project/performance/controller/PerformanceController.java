@@ -153,6 +153,7 @@ public class PerformanceController {
 	        if(isUpdated) {
                 response.put("success", true);
                 response.put("message", "리뷰가 수정되었습니다.");
+                batchService.updatePerformanceReviewRanks();
             } else {
                 response.put("success", false);
                 response.put("message", "리뷰 수정에 실패했습니다.");
@@ -188,7 +189,7 @@ public class PerformanceController {
 	        if (isDeleted) {
 	            response.put("success", true);
 	            response.put("message", "리뷰가 삭제되었습니다.");
-	            
+	            batchService.updatePerformanceReviewRanks();
 	        } else {
 	            response.put("success", false);
 	            response.put("message", "리뷰 삭제에 실패했습니다.");

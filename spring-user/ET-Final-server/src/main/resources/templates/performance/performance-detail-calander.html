@@ -15,9 +15,9 @@
 	<!-- HTML 수정 부분 -->
 	<div class="performance-container" style="margin-top: 20px;">
 		<div class="mt-3 mb-4">
-		    <button id="backToList" class="btn custom-back-btn" style="padding-left: 0;">
-		        <i class="fas fa-angle-left me-1"></i>목록으로
-		    </button>
+			<button id="backToList" class="btn custom-back-btn" style="padding-left: 0;">
+				<i class="fas fa-angle-left me-1"></i>목록으로
+			</button>
 		</div>
 		<div class="performance-content">
 			<!-- 왼쪽: 공연 정보 -->
@@ -83,12 +83,21 @@
 									<th>별점</th>
 									<td class="performance-rank">
 										<div class="star-rating">
-											<th:block th:with="rating=${performance.avgRating}">
-												<div class="stars-container" th:data-rating="${rating}">
-													<div class="stars"></div>
-													<span class="rating-number" th:text="|${rating}/5|"></span>
+											<div class="stars-container">
+												<div class="stars">
+													<th:block th:with="rating=${performance.avgRating}">
+														<!-- 전체 별 -->
+														<span th:each="i : ${#numbers.sequence(1, 5)}"
+															th:class="'star ' + (${i <= rating} ? 'filled' : '')"
+															th:text="'★'">
+														</span>
+														<!-- 평점 숫자 -->
+														<span class="rating-number"
+															th:text="|${#numbers.formatDecimal(rating, 1, 1)}/5.0|"
+															style="align-self: center;"></span>
+													</th:block>
 												</div>
-											</th:block>
+											</div>
 										</div>
 									</td>
 								</tr>
@@ -122,11 +131,16 @@
 							<!-- 리뷰 작성 폼 -->
 							<div class="review-form">
 								<div class="star-rating mb-3">
-									<input type="radio" name="rating" value="1" id="rate1"><label for="rate1">★</label>
-									<input type="radio" name="rating" value="2" id="rate2"><label for="rate2">★</label>
-									<input type="radio" name="rating" value="3" id="rate3"><label for="rate3">★</label>
-									<input type="radio" name="rating" value="4" id="rate4"><label for="rate4">★</label>
-									<input type="radio" name="rating" value="5" id="rate5"><label for="rate5">★</label>
+									<input type="radio" name="rating" value="1" id="rate1">
+									<label for="rate1">★</label>
+									<input type="radio" name="rating" value="2" id="rate2">
+									<label for="rate2">★</label>
+									<input type="radio" name="rating" value="3" id="rate3">
+									<label for="rate3">★</label>
+									<input type="radio" name="rating" value="4" id="rate4">
+									<label for="rate4">★</label>
+									<input type="radio" name="rating" value="5" id="rate5">
+									<label for="rate5">★</label>
 								</div>
 								<textarea id="reviewContent" rows="3" placeholder="공연에 대한 리뷰를 남겨주세요."></textarea>
 								<button id="submitReview">리뷰 등록하기</button>
@@ -199,93 +213,41 @@
 			schedule: /*[[${performance.schedule}]]*/ {}
 		};
 
-		document.addEventListener('DOMContentLoaded', function () {
-			const containers = document.querySelectorAll('.stars-container');
+		document.getElementById('backToList').addEventListener('click', function () {
+			const currentUrl = new URL(window.location.href);
+			const searchParams = currentUrl.searchParams;
 
-			containers.forEach(container => {
-				const rating = parseFloat(container.dataset.rating);
-				const starsDiv = container.querySelector('.stars');
-				const MAX_STARS = 5;
+			// 장르 한글값을 영문으로 변환
+			let genreParam = '';
+			const genre = decodeURIComponent(searchParams.get('genre'));
 
-				// 별점 계산
-				const fullStars = Math.floor(rating);
-				let decimalPart = rating % 1;
+			switch (genre) {
+				case '뮤지컬':
+					genreParam = 'musical';
+					break;
+				case '연극':
+					genreParam = 'theater';
+					break;
+				case '서양음악(클래식)':
+					genreParam = 'classic';
+					break;
+				default:
+					genreParam = genre;
+			}
 
-				// 소수점 비율 조정
-				// 0.5는 40%로 표시, 나머지는 비례적으로 조정
-				if (decimalPart > 0) {
-					if (decimalPart === 0.5) {
-						decimalPart = 0.4;
-					} else if (decimalPart < 0.5) {
-						decimalPart = decimalPart * 0.8; // 0.1~0.4는 좀 더 작게 표시
-					} else {
-						decimalPart = 0.4 + ((decimalPart - 0.5) * 1.2); // 0.6~0.9는 좀 더 크게 표시
-					}
-				}
+			// localStorage에 검색 파라미터 저장
+			if (searchParams.has('searchKeyword')) {
+				localStorage.setItem('searchKeyword', searchParams.get('searchKeyword'));
+			}
+			if (searchParams.has('searchType')) {
+				localStorage.setItem('searchType', searchParams.get('searchType'));
+			}
+			if (searchParams.has('filter')) {
+				localStorage.setItem('currentFilter', searchParams.get('filter'));
+			}
 
-				const emptyStars = MAX_STARS - Math.ceil(rating);
-
-				let starsHtml = '';
-
-				// 채워진 별
-				for (let i = 0; i < fullStars; i++) {
-					starsHtml += '<span class="star filled">★</span>';
-				}
-
-				// 소수점 별
-				if (decimalPart > 0) {
-					starsHtml += `
-		                <span class="partial-star">
-		                    <span class="star">★</span>
-		                    <span class="star-filled" style="width: ${decimalPart * 100}%">★</span>
-		                </span>
-		            `;
-				}
-
-				// 빈 별
-				for (let i = 0; i < emptyStars; i++) {
-					starsHtml += '<span class="star">★</span>';
-				}
-
-				starsDiv.innerHTML = starsHtml;
-			});
-		});
-		
-		document.getElementById('backToList').addEventListener('click', function() {
-		    const currentUrl = new URL(window.location.href);
-		    const searchParams = currentUrl.searchParams;
-		    
-		    // 장르 한글값을 영문으로 변환
-		    let genreParam = '';
-		    const genre = decodeURIComponent(searchParams.get('genre'));
-		    
-		    switch(genre) {
-		        case '뮤지컬':
-		            genreParam = 'musical';
-		            break;
-		        case '연극':
-		            genreParam = 'theater';
-		            break;
-		        case '서양음악(클래식)':
-		            genreParam = 'classic';
-		            break;
-		        default:
-		            genreParam = genre;
-		    }
-
-		    // localStorage에 검색 파라미터 저장
-		    if (searchParams.has('searchKeyword')) {
-		        localStorage.setItem('searchKeyword', searchParams.get('searchKeyword'));
-		    }
-		    if (searchParams.has('searchType')) {
-		        localStorage.setItem('searchType', searchParams.get('searchType'));
-		    }
-		    if (searchParams.has('filter')) {
-		        localStorage.setItem('currentFilter', searchParams.get('filter'));
-		    }
-
-		    // 페이지 이동
-		    window.location.href = `/performance/genre/${genreParam}`;
+			// 페이지 이동
+			window.location.href = `/performance/genre/${genreParam}`;
 		});
 	</script>
 
