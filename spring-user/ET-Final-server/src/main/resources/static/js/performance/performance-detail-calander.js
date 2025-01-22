@@ -493,6 +493,48 @@ function initializeReviews() {
 		initializeStarRating(mainStarRating);
 	}
 
+	// 리뷰 작성 폼의 상태 업데이트
+	function updateReviewFormStatus() {
+		const reviewForm = document.querySelector(".review-form");
+		if (!reviewForm) return;
+
+		const textarea = reviewForm.querySelector("#reviewContent");
+		const submitButton = reviewForm.querySelector("#submitReview");
+		const starRating = reviewForm.querySelector(".star-rating");
+
+		// 공연 상태에 따른 메시지
+		let message;
+		let isReviewable = false;
+
+		switch (performanceData.prfstate) {
+			case "공연중":
+				isReviewable = true;
+				message = "리뷰를 작성해주세요.";
+				break;
+			case "공연예정":
+				message = "공연 시작 후 리뷰를 작성할 수 있습니다.";
+				break;
+			case "공연종료":
+				message = "종료된 공연은 리뷰를 작성할 수 없습니다.";
+				break;
+			default:
+				message = "현재 리뷰를 작성할 수 없습니다.";
+		}
+
+		// 리뷰 폼 상태 업데이트
+		textarea.disabled = !isReviewable;
+		textarea.placeholder = message;
+		submitButton.disabled = !isReviewable;
+
+		if (!isReviewable) {
+			starRating.style.pointerEvents = "none";
+			starRating.style.opacity = "0.5";
+		} else {
+			starRating.style.pointerEvents = "auto";
+			starRating.style.opacity = "1";
+		}
+	}
+
 	function loadReviews() {
 		$.get(`/performance/review/list/${mt20id}`, function(reviews) {
 			const reviewList = $("#reviewList");
@@ -541,7 +583,6 @@ function initializeReviews() {
 	}
 
 	// 리뷰 등록
-	// 리뷰 등록 부분 수정
 	$("#submitReview").click(function() {
 		if (!currentMemberNo) {
 			alert("로그인 후 이용해주세요.");
@@ -584,7 +625,6 @@ function initializeReviews() {
 		});
 	});
 
-	// 리뷰 수정 시 별점 초기화
 	// 리뷰 수정 시 별점 초기화
 	$(document).on("click", ".edit-review", function() {
 		const reviewNo = $(this).data("review-no");
@@ -726,6 +766,9 @@ function initializeReviews() {
 			}
 		});
 	});
+	
+	// 페이지 로드시 리뷰 폼 상태 업데이트
+    updateReviewFormStatus();
 
 	// 초기 리뷰 로드
 	loadReviews();
