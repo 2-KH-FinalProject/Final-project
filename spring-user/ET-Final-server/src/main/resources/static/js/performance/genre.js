@@ -34,9 +34,20 @@ const escapeHtml = (() => {
 
 // 별점 생성 함수
 const createStarRating = (rating) => {
-	const fullStars = '★'.repeat(Math.floor(rating));
-	const emptyStars = '☆'.repeat(5 - Math.floor(rating));
-	return `${fullStars}${emptyStars}`;
+    const fullStars = Math.floor(rating);                    // 정수부분
+    const decimal = rating - fullStars;                      // 소수부분
+    const threshold = 0.1;                                   // 반별 표시 임계값
+    const hasHalfStar = decimal >= threshold;                // 임계값 이상이면 반별 표시
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // 남은 빈 별 개수
+    
+    // 각 별을 span으로 감싸기
+    const stars = [
+        ...Array(fullStars).fill('<span class="star full-star">★</span>'),          // 꽉 찬 별
+        ...(hasHalfStar ? ['<span class="star half-star"></span>'] : []),           // 반별
+        ...Array(emptyStars).fill('<span class="star empty-star">☆</span>')        // 빈 별
+    ];
+    
+    return stars.join('');
 };
 
 // 공연 요소 생성
