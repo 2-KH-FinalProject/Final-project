@@ -739,6 +739,19 @@ body {
     white-space: nowrap;
 }
 
+.half-filled {
+    color: gold;
+    position: relative;
+}
+
+.half-filled:before {
+    content: '★';
+    position: absolute;
+    width: 50%; /* 반 개 별 표시 */
+    overflow: hidden;
+    color: gold; /* 반 개 별 색상 */
+}
+
 #info .performance-rank .rating-number {
     font-size: 15px;
     color: #666;

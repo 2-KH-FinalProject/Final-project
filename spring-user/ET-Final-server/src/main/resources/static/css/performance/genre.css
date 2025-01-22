@@ -135,17 +135,72 @@
 	opacity: 1;
 }
 
-/* 평점 별 디자인 */
-.static-stars {
-	color: #ffca28;
-	font-size: 1.2em;
-	letter-spacing: 2px;
+/* 별점 컨테이너 */
+.review-stars {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
+/* 별점 스타일 */
+.static-stars {
+    color: #ffca28;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+/* 모든 별들의 기본 스타일 */
+.star {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.3em;
+    text-align: center;
+    position: relative;
+}
+
+/* 마지막 별의 오른쪽 여백 제거 */
+.star:last-child {
+    margin-right: 0;
+}
+
+/* 꽉 찬 별 스타일 */
+.full-star {
+    color: #ffca28;
+}
+
+/* 빈 별 스타일 */
+.empty-star {
+    color: #ffca28;
+}
+
+/* 반별 스타일 */
+.half-star {
+    background: linear-gradient(90deg, #ffca28 50%, transparent 50%);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.half-star::before {
+    content: "★";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* 숫자 점수 스타일 */
 .numeric-rating {
-	color: #666;
-	font-size: 0.9em;
-	margin-left: 8px;
+    color: #666;
+    font-size: 0.9em;
+    margin-left: 12px;
+    display: inline-block;
+    line-height: 1;
 }
 
 /* 탭 컨테이너 스타일 */

@@ -82,23 +82,23 @@
 								<tr>
 									<th>별점</th>
 									<td class="performance-rank">
-										<div class="star-rating">
-											<div class="stars-container">
-												<div class="stars">
-													<th:block th:with="rating=${performance.avgRating}">
-														<!-- 전체 별 -->
-														<span th:each="i : ${#numbers.sequence(1, 5)}"
-															th:class="'star ' + (${i <= rating} ? 'filled' : '')"
-															th:text="'★'">
-														</span>
-														<!-- 평점 숫자 -->
-														<span class="rating-number"
-															th:text="|${#numbers.formatDecimal(rating, 1, 1)}/5.0|"
-															style="align-self: center;"></span>
-													</th:block>
-												</div>
-											</div>
-										</div>
+									    <div class="star-rating">
+									        <div class="stars-container">
+									            <div class="stars">
+									                <th:block th:with="rating=${performance.avgRating}">
+									                    <!-- 전체 별 -->
+									                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+									                        th:class="'star ' + (${i <= (rating >= 0 ? (rating - rating % 1) : 0)} ? 'filled' : (${i == (rating - rating % 1 + 1) && rating - rating % 1 < rating} ? 'half-filled' : ''))"
+									                        th:text="'★'">
+									                    </span>
+									                    <!-- 평점 숫자 -->
+									                    <span class="rating-number"
+									                        th:text="|${#numbers.formatDecimal(rating, 1, 1)}/5.0|"
+									                        style="align-self: center; margin-top: 5px;"></span>
+									                </th:block>
+									            </div>
+									        </div>
+									    </div>
 									</td>
 								</tr>
 							</table>
