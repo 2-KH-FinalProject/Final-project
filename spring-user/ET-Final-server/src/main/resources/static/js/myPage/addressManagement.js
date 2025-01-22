@@ -174,24 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	addressForm.addEventListener('submit', async function(e) {
 		e.preventDefault();
 
-		// // 0108 문제 시 삭제
-		// // 변경된 값이 있는지 확인
-		// const phoneData = {};
-		// let addressIsModified = false;
-
-		// // 휴대폰 번호
-		// const phoneValue = document.getElementById("adsPhone").value.trim();
-		// if (phoneValue && phoneCheckObj.adsPhone) {
-		// 	phoneData.phone = phoneValue;
-		// 	addressIsModified = true;
-		// }
-		// // 추가 연락처
-		// const extraPhoneValue = document.getElementById("adsExtraPhone").value.trim();
-		// if (extraPhoneValue && phoneCheckObj.adsExtraPhone) {
-		// 	phoneData.extraPhone = extraPhoneValue;
-		// 	addressIsModified = true;
-		// }
-
 		// 모든 유효성 검사가 통과했는지 확인
 	if (!phoneCheckObj.adsPhone || !phoneCheckObj.adsExtraPhone) {
 		alert('휴대폰 번호 또는 추가 연락처가 유효하지 않습니다. 다시 확인해 주세요.');
@@ -357,11 +339,6 @@ function displayAddressList(addresses) {
 			actions.classList.toggle('show', checkbox.checked);
 		});
 
-		// // 기존 체크박스 이벤트 리스너
-		// checkbox.addEventListener('change', (e) => {
-		// 	e.stopPropagation(); // 상위 이벤트 전파 방지
-		// 	toggleCheckboxState(e.target.checked);
-		// });
 
 
 		// 체크박스 클릭 이벤트
@@ -377,13 +354,6 @@ function displayAddressList(addresses) {
 					allActions[index].classList.remove('show');
 				}
 			});
-
-			// allCheckboxes.forEach(cb => {
-			// 		if (cb !== e.target) {
-			// 				cb.checked = false;
-			// 				cb.closest('.address-item').querySelector('.address-actions').classList.remove('show');
-			// 		}
-			// });
 
 			// 현재 체크박스에 대한 actions 토글
 			actions.classList.toggle('show', e.target.checked);

@@ -395,15 +395,16 @@ public class MyPageController {
 	 */
 	@ResponseBody
 	@GetMapping("verifyEmail")
-	public int verifyEmail(@RequestParam("verificationEmail") String verificationEmail,
+	public ResponseEntity<Integer> verifyEmail(@RequestParam("verificationEmail") String verificationEmail,
 			@RequestParam("currentEmail") String currentEmail) {
 		
 		// 현재 사용자의 이메일과 동일하면 사용 가능
 	    if (verificationEmail.equals(currentEmail)) {
-	        return 0;
+	    	return ResponseEntity.ok(0); // 중복 아님을 나타내는 0 반환
 	    }
 		
-		return service.verifyEmail(verificationEmail);
+	    int result = service.verifyEmail(verificationEmail);
+	    return ResponseEntity.ok(result); // ResponseEntity로 감싸서 반환
 	}
 	
 
@@ -427,6 +428,8 @@ public class MyPageController {
 		// 이메일 보내기 실패
 		return 0;
 	}
+	
+	
 	
 
 	/**

@@ -22,7 +22,7 @@ function loadUserInfo() {
 			document.getElementById("currentNickname").value = data.memberNickname || "";
 
 			document.getElementById("verificationEmail").value = data.memberEmail || "";
-
+			document.getElementById("currentEmail").value = data.memberEmail || ""; 
 		
 
 			// 성별 설정
@@ -68,75 +68,76 @@ const verificationTime = "05:00";
 let minit = verificationMin;
 let second = verificationSec;
 
-/* 이메일 유효성 검사 */
+
 
 // 이메일 유효성 검사에 사용될 요소 얻어오기
 const verificationEmail = document.querySelector("#verificationEmail");
 const verificationEmailMessage = document.querySelector("#verificationEmailMessage");
 
-/* 이메일 중복 검사 로직 (input 에 입력 할때마다 중복검사 비동기 요청 보내기) */
+/* 이메일 중복 검사 로직 */
 verificationEmail.addEventListener("input", e => {
-	const inputEmail = e.target.value;
+    const inputEmail = e.target.value.trim();
+    const currentEmail = document.querySelector("#currentEmail").value;
 
+    // 입력된 이메일이 없는 경우
+    if (inputEmail.length === 0) {
+        verificationEmailMessage.innerText = "";
+        mypageCheckObj.verificationEmail = true;
+        mypageCheckObj.authKey = true;
+        return;
+    }
 
-	// 작성된 이메일 값 얻어오기
-	//const verificationInputEmail = e.target.value;
+    // 현재 이메일과 동일한 경우
+    if (inputEmail === currentEmail) {
+        verificationEmailMessage.innerText = "현재 사용중인 이메일입니다.";
+        verificationEmailMessage.classList.add("confirm");
+        verificationEmailMessage.classList.remove("error");
+        mypageCheckObj.verificationEmail = true;
+        mypageCheckObj.authKey = true;
+        return;
+    }
 
-	// 작성된 이메일 값이 있을 경우에만 검증 실행
-	if (inputEmail.trim().length > 0) {
-		mypageCheckObj.verificationEmail = false; // 검증 필요함을 표시
-		mypageCheckObj.authKey = false; // 인증 필요함을 표시
+    // 이메일 형식 검사
+    const emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegExp.test(inputEmail)) {
+        verificationEmailMessage.innerText = "이메일 형식이 유효하지 않습니다.";
+        verificationEmailMessage.classList.add("error");
+        verificationEmailMessage.classList.remove("confirm");
+        mypageCheckObj.verificationEmail = false;
+        mypageCheckObj.authKey = false;
+        return;
+    }
 
-
-		// verificationEmailMessage.innerText = "메일을 받을 수 있는 이메일을 입력해주세요.";
-
-		// // 메시지에 색상을 추가하는 클래스 모두 제거
-		// verificationEmailMessage.classList.remove('confirm', 'error');
-
-		// // 잘못 입력한 띄어쓰기가 있을 경우 없앰
-		// verificationEmail.value = "";
-
-		// 기존의 이메일 유효성 검사 로직...
-		const vfRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-		// (알맞은 이메일 형태가 아닌 경우)
-		if (!vfRegExp.test(inputEmail)) {
-			verificationEmailMessage.innerText = "알맞은 이메일 형식으로 작성해주세요.";
-			verificationEmailMessage.classList.add('error'); // 글자를 빨간색으로 변경
-			verificationEmailMessage.classList.remove('confirm'); // 초록색 제거
-			return;
-		}
-
-		// 중복 검사 수행
-		// 비동기(ajax)
-		fetch(`/mypage/verifyEmail?verificationEmail=${inputEmail}&currentEmail=${document.getElementById("verificationEmail").value}`)
-			.then(resp => resp.text())
-			.then(count => {
-
-				if (count == 1) { // 중복 O
-					verificationEmailMessage.innerText = "이미 사용중인 이메일 입니다.";
-					verificationEmailMessage.classList.add("error");
-					verificationEmailMessage.classList.remove("confirm");
-					// mypageCheckObj.verificationEmail = false; // 중복은 유효하지 않은 상태다..
-					return;
-				}
-
-				// 중복 X 경우
-				verificationEmailMessage.innerText = "사용 가능한 이메일 입니다.";
-				verificationEmailMessage.classList.add("confirm");
-				verificationEmailMessage.classList.remove("error");
-				mypageCheckObj.verificationEmail = true;
-
-			});
-	} else {
-		// 이메일 입력값이 없는 경우 메시지 초기화 및 유효성 true로 설정
-		verificationEmailMessage.innerText = "";
-		mypageCheckObj.verificationEmail = true;
-		mypageCheckObj.authKey = true;
-	}
-
-
+    // 이메일 중복 검사 수행
+    fetch(`/mypage/verifyEmail?verificationEmail=${encodeURIComponent(inputEmail)}&currentEmail=${encodeURIComponent(currentEmail)}`)
+        .then(resp => resp.text()) // JSON 대신 text로 받기
+        .then(result => {
+            const count = parseInt(result);
+            if (count === 1) { // 중복된 경우
+                verificationEmailMessage.innerText = "이미 사용중인 이메일입니다.";
+                verificationEmailMessage.classList.add("error");
+                verificationEmailMessage.classList.remove("confirm");
+                mypageCheckObj.verificationEmail = false;
+                mypageCheckObj.authKey = false;
+            } else { // 사용 가능한 경우
+                verificationEmailMessage.innerText = "사용 가능한 이메일입니다.";
+                verificationEmailMessage.classList.add("confirm");
+                verificationEmailMessage.classList.remove("error");
+                mypageCheckObj.verificationEmail = true;
+                // 이메일이 변경되었으므로 인증이 필요함
+                mypageCheckObj.authKey = false;
+            }
+        })
+        .catch(error => {
+            console.error("이메일 중복 검사 중 오류 발생:", error);
+            verificationEmailMessage.innerText = "중복 검사 중 오류가 발생했습니다.";
+            verificationEmailMessage.classList.add("error");
+            verificationEmailMessage.classList.remove("confirm");
+            mypageCheckObj.verificationEmail = false;
+            mypageCheckObj.authKey = false;
+        });
 });
+
 
 
 // 인증번호 받기 버튼 클릭 시 
@@ -429,6 +430,13 @@ updateForm.addEventListener("submit", e => {
 if (document.getElementById("userTel").value.trim() !== "" && !mypageCheckObj.userTel) {
 	alert("전화번호가 올바르지 않습니다.");
 	document.getElementById("userTel").focus();
+	return;
+}
+
+// 이메일 중복 검사 실패한 경우
+if (document.getElementById("verificationEmail").value.trim() !== "" && !mypageCheckObj.verificationEmail) {
+	alert("이메일이 올바르지 않습니다.");
+	document.getElementById("verificationEmail").focus();
 	return;
 }
 
