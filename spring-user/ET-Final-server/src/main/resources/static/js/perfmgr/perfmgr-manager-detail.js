@@ -32,9 +32,10 @@ function deletePerformance() {
 }
 
 // 목록으로 돌아가기
-function goBack() {
-   window.history.back();
-}
+document.getElementById('backToList').addEventListener('click', function() {
+    // perfmgr-list 페이지로 이동
+    window.location.href = '/perfmgr/perfmgr-list';
+});
 
 // 스로틀 함수
 function throttle(func, limit) {

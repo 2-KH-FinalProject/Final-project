@@ -44,7 +44,24 @@ const createStarRating = (rating) => {
 function createPerformanceElement(performance) {
     const div = document.createElement('div');
     div.className = 'performance-item';
-    div.onclick = () => location.href = `/performance/detail/${performance.mt20id}`;
+    
+    // URL 파라미터 생성
+    const searchParams = new URLSearchParams({
+        page: state.page,
+        genre: getCurrentGenre(),
+        filter: state.currentFilter
+    });
+
+    // 검색 조건이 있는 경우 추가
+    if (state.searchKeyword) {
+        searchParams.append('searchKeyword', state.searchKeyword);
+    }
+    if (state.searchType) {
+        searchParams.append('searchType', state.searchType);
+    }
+
+    // onclick 이벤트에 검색 파라미터 추가
+    div.onclick = () => location.href = `/performance/detail/${performance.mt20id}?${searchParams.toString()}`;
 
     const img = new Image();
     img.src = performance.poster;
@@ -171,6 +188,35 @@ function createNoDataMessage(filter) {
 
 // 데이터 로드
 async function loadMorePerformances() {
+    // 페이지 첫 로드시 localStorage 체크
+    if (!state.initialLoadComplete) {
+        // localStorage에서 저장된 검색 조건 복원
+        const savedKeyword = localStorage.getItem('searchKeyword');
+        const savedType = localStorage.getItem('searchType');
+        const savedFilter = localStorage.getItem('currentFilter');
+
+        if (savedKeyword) {
+            state.searchKeyword = savedKeyword;
+			const searchKeyword = document.getElementById("performanceSearchInput");
+			if(searchKeyword) {
+				searchKeyword.value = savedKeyword;
+			}
+            localStorage.removeItem('searchKeyword');
+        }
+        if (savedType) {
+            state.searchType = savedType;
+			const searchTypeSelect = document.getElementById('performanceSearchType');
+			if (searchTypeSelect) {
+				searchTypeSelect.value = savedType;
+			}
+            localStorage.removeItem('searchType');
+        }
+        if (savedFilter) {
+            state.currentFilter = savedFilter;
+            localStorage.removeItem('currentFilter');
+        }
+    }
+
     if (state.isLoading || !state.hasMoreData) return;
 
     if (state.searchKeyword && state.page > 1) {
@@ -198,9 +244,9 @@ async function loadMorePerformances() {
     try {
         const response = await fetch(`/performanceApi/genre/more?${searchParams.toString()}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
+
         const performances = await response.json();
-        
+
         if (performances?.length) {
             const fragment = document.createDocumentFragment();
             performances.forEach(performance => {

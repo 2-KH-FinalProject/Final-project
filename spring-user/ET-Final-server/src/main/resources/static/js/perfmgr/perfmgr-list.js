@@ -60,7 +60,22 @@ function escapeHtml(unsafe) {
 function createPerformanceElement(performance) {
 	const div = document.createElement('div');
 	div.className = 'performance-item';
-	div.onclick = () => location.href = `/perfmgr/perfmgr-manager-detail/${performance.mt20id}`;
+
+	// onclick 이벤트에서 현재 검색 상태를 localStorage에 저장
+	div.onclick = () => {
+		// 현재 검색 상태 저장
+		if (searchKeyword) {
+			localStorage.setItem('searchKeyword', searchKeyword);
+		}
+		if (searchType) {
+			localStorage.setItem('searchType', searchType);
+		}
+		// 현재 필터 상태 저장
+		localStorage.setItem('perfmgrFilter', currentFilter);
+
+		// 상세 페이지로 이동
+		location.href = `/perfmgr/perfmgr-manager-detail/${performance.mt20id}`;
+	};
 
 	const img = new Image();
 	img.src = performance.poster || '/images/default-poster.png';
@@ -248,47 +263,62 @@ const scrollHandler = throttle(() => {
 
 // 초기화 및 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', function() {
-    // 저장된 필터 상태 복원
-    const savedFilter = localStorage.getItem('perfmgrFilter');
-    if (savedFilter) {
-        currentFilter = savedFilter;
-        const filterButton = document.querySelector(`.filter-btn[data-filter="${savedFilter}"]`);
-        if (filterButton) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            filterButton.classList.add('active');
+	// 저장된 필터 상태 복원
+	const savedFilter = localStorage.getItem('perfmgrFilter');
+	if (savedFilter) {
+		currentFilter = savedFilter;
+		const filterButton = document.querySelector(`.filter-btn[data-filter="${savedFilter}"]`);
+		if (filterButton) {
+			document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+			filterButton.classList.add('active');
 			localStorage.removeItem('perfmgrFilter');
-        }
-    }
+		}
+	}
 
-    // 검색 버튼 클릭 이벤트
-    document.getElementById('performanceSearchButton').addEventListener('click', handleSearch);
+	// localStorage에서 검색 조건 복원
+	const savedKeyword = localStorage.getItem('searchKeyword');
+	const savedType = localStorage.getItem('searchType');
 
-    // 엔터 키 이벤트
-    document.getElementById('performanceSearchInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    });
+	if (savedKeyword) {
+		searchKeyword = savedKeyword;
+		document.getElementById('performanceSearchInput').value = savedKeyword;
+		localStorage.removeItem('searchKeyword');
+	}
+	if (savedType) {
+		searchType = savedType;
+		document.getElementById('performanceSearchType').value = savedType;
+		localStorage.removeItem('searchType');
+	}
 
-    // 필터 버튼 이벤트 리스너 등록
-    document.querySelectorAll('.filter-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            // 현재 필터 상태 저장
-            const filter = this.dataset.filter;
-            localStorage.setItem('perfmgrFilter', filter);
-            handleFilterClick(e);
-        });
-    });
+	// 검색 버튼 클릭 이벤트
+	document.getElementById('performanceSearchButton').addEventListener('click', handleSearch);
 
-    // 첫 데이터 로드
-    loadMorePerformances();
+	// 엔터 키 이벤트
+	document.getElementById('performanceSearchInput').addEventListener('keypress', function(e) {
+		if (e.key === 'Enter') {
+			handleSearch();
+		}
+	});
 
-    // 이벤트 리스너 등록
-    scrollToTopButton.addEventListener('click', scrollToTop);
-    window.addEventListener('scroll', throttle(toggleScrollButton, 100));
+	// 필터 버튼 이벤트 리스너 등록
+	document.querySelectorAll('.filter-btn').forEach(button => {
+		button.addEventListener('click', function(e) {
+			// 현재 필터 상태 저장
+			const filter = this.dataset.filter;
+			localStorage.setItem('perfmgrFilter', filter);
+			handleFilterClick(e);
+		});
+	});
 
-    // 스크롤 이벤트 리스너 등록
-    window.addEventListener('scroll', scrollHandler, { passive: true });
+	// 첫 데이터 로드
+	loadMorePerformances();
+
+	// 이벤트 리스너 등록
+	scrollToTopButton.addEventListener('click', scrollToTop);
+	window.addEventListener('scroll', throttle(toggleScrollButton, 100));
+
+	// 스크롤 이벤트 리스너 등록
+	window.addEventListener('scroll', scrollHandler, { passive: true });
 });
 
 // 정리

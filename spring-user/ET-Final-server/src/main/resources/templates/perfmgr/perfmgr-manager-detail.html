@@ -94,6 +94,9 @@
     <input type="hidden" id="fcltla" th:value="${performance.fcltla}">
     <input type="hidden" id="fcltlo" th:value="${performance.fcltlo}">
     <input type="hidden" id="mt20id" name="mt20id" th:value="${performance.mt20id}">
+	
+	<input type="hidden" id="currentSearchKeyword" th:value="${searchKeyword}">
+	<input type="hidden" id="currentSearchType" th:value="${searchType}">
 
     <script th:inline="javascript">
         const performanceData = {

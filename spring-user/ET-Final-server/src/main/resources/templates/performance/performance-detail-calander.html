@@ -252,7 +252,40 @@
 		});
 		
 		document.getElementById('backToList').addEventListener('click', function() {
-		    window.history.back();
+		    const currentUrl = new URL(window.location.href);
+		    const searchParams = currentUrl.searchParams;
+		    
+		    // 장르 한글값을 영문으로 변환
+		    let genreParam = '';
+		    const genre = decodeURIComponent(searchParams.get('genre'));
+		    
+		    switch(genre) {
+		        case '뮤지컬':
+		            genreParam = 'musical';
+		            break;
+		        case '연극':
+		            genreParam = 'theater';
+		            break;
+		        case '서양음악(클래식)':
+		            genreParam = 'classic';
+		            break;
+		        default:
+		            genreParam = genre;
+		    }
+
+		    // localStorage에 검색 파라미터 저장
+		    if (searchParams.has('searchKeyword')) {
+		        localStorage.setItem('searchKeyword', searchParams.get('searchKeyword'));
+		    }
+		    if (searchParams.has('searchType')) {
+		        localStorage.setItem('searchType', searchParams.get('searchType'));
+		    }
+		    if (searchParams.has('filter')) {
+		        localStorage.setItem('currentFilter', searchParams.get('filter'));
+		    }
+
+		    // 페이지 이동
+		    window.location.href = `/performance/genre/${genreParam}`;
 		});
 	</script>
 
