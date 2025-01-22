@@ -6,7 +6,7 @@
 	<div th:fragment="managerSignupModal" id="peradmSignupModal" class="modal">
 		<div class="modal-content">
 			<div class="modal-header">
-				<a href="#" class="back-button" onclick="openModal('selectModal'); closeModal('peradmSignupModal')"></a>
+				<a class="back-button" onclick="openModal('selectModal'); closeModal('peradmSignupModal')"></a>
 				<h2>공연 관리자 회원가입</h2>
 				<span class="close" onclick="closeModal('peradmSignupModal')">&times;</span>
 			</div>
@@ -53,7 +53,7 @@
 			</div>
 			<div class="modal-footer">
 				<p>이미 계정이 있으신가요?
-					<a href="#" onclick="openModal('loginModal'); closeModal('peradmSignupModal')">로그인</a>
+					<a onclick="openModal('loginModal'); closeModal('peradmSignupModal')">로그인</a>
 				</p>
 			</div>
 		</div>

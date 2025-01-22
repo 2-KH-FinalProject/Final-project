@@ -146,7 +146,7 @@ public class PerfmgrController {
 		String message = null;
 
 		if (result > 0) { // 성공 시
-			message = inputMember.getConcertManagerNickname() + "님의 가입을 환영 합니다!";
+			message = inputMember.getConcertManagerNickname() + "님의 가입을 환영 합니다! \n관리자의 승인 이후 로그인이 가능합니다.";
 			path = "/";
 
 		} else { // 실패
