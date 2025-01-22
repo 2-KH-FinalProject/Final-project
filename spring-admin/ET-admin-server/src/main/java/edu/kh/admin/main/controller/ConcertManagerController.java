@@ -20,7 +20,7 @@ import edu.kh.admin.main.model.service.ConcertManagerService;
 import lombok.RequiredArgsConstructor;
 
 @RestController 
-@CrossOrigin( origins = "https://final-project-react-individual.vercel.app/",
+@CrossOrigin( origins = "http://192.168.50.236/",
 			  allowedHeaders = "*",
 			  allowCredentials = "true",
 			  methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, 

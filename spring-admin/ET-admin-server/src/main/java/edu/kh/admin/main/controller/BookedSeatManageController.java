@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  */
 @RestController
-@CrossOrigin(origins = "https://final-project-react-individual.vercel.app/", allowedHeaders = "*", allowCredentials = "true", methods = {
+@CrossOrigin(origins = "http://192.168.50.236/", allowedHeaders = "*", allowCredentials = "true", methods = {
 		RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 @RequestMapping("seatManage")
 @RequiredArgsConstructor
