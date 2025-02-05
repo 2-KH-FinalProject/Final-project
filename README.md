@@ -38,3 +38,62 @@
 </table>
 
 <br />
+
+## 📂 폴더 구조
+
+```
+📦src
+ ├─ 📂main/java/
+ │  ├─ 📂edu/kh/project
+ │  │   ├─ 📂common
+ │  │   │  ├─ 📂config
+ │  │   │  ├─ 📂filter
+ │  │   │  ├─ 📂jwt
+ │  │   │  └─ 📂util
+ │  │   ├─ 📂email
+ │  │   ├─ 📂main
+ │  │   ├─ 📂member
+ │  │   ├─ 📂myPage
+ │  │   ├─ 📂notice
+ │  │   ├─ 📂payment
+ │  │   ├─ 📂perfmgr
+ │  │   ├─ 📂performance
+ │  │   ├─ 📂redis
+ │  │   ├─ 📂search
+ │  │   ├─ 📂statistics
+ │  └─ 📂resources
+ │     ├─ 📂mappers
+ │     ├─ 📂static
+ │     ├─ 📂css
+ │     │  ├─ 📂common
+ │     │  ├─ 📂myPage
+ │     │  ├─ 📂notice
+ │     │  ├─ 📂payment
+ │     │  ├─ 📂perfmgr
+ │     │  └─ 📂performance
+ │     ├─📂images
+ │     ├─ 📂js
+ │     │  ├─ 📂common
+ │     │  ├─ 📂myPage
+ │     │  ├─ 📂notice
+ │     │  ├─ 📂payment
+ │     │  ├─ 📂perfmgr
+ │     │  └─ 📂performance
+ │     ├─ 📂templates
+ │     │  ├─ 📂common
+ │     │  │  └─ 📂modals
+ │     │  ├─ 📂email
+ │     │  ├─ 📂header
+ │     │  ├─ 📂mypage
+ │     │  ├─ 📂notice
+ │     │  ├─ 📂payment
+ │     │  ├─ 📂perfmgr
+ │     │  ├─ 📂performance
+ │     │  └─ 📂sideMenu
+ │     ├─ 📜application.properties
+ │     ├─ 📜config.properties
+ │     ├─ 📜logback-spring.xml
+ │     ├─ 📜messages.properties
+ │     └─ 📜mybatis-config.xml
+```
+
